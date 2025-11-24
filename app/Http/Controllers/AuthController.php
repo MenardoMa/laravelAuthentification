@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\UserStatus;
+use App\Models\User;
+use App\Helpers\CMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -89,4 +93,67 @@ class AuthController extends Controller
 
         return view('back.pages.auth.forgot', $data);
     }
+
+    public function passwordHandler(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email']
+        ], [
+            'email.required' => 'Veuillez saisir votre adresse email.',
+            'email.email' => 'Le format de l’adresse email est invalide.',
+            'email.exists' => 'Aucun utilisateur n’est associé à cette adresse email.',
+        ]);
+
+        #Recuperateur user
+        $user = User::where('email', $request->email)->first();
+
+        #Create token
+        $token = base64_encode(\Str::random(64));
+
+        #Check Token
+        $oldToken = DB::table('password_reset_tokens')->where('email', $user->email)->first();
+
+        if ($oldToken) {
+            DB::table('password_reset_tokens')
+                ->where('email', $user->email)
+                ->update([
+                    'token' => $token,
+                    'created_at' => Carbon::now(),
+                ]);
+        } else {
+            DB::table('password_reset_tokens')
+                ->where('email', $user->email)
+                ->insert([
+                    'email' => $user->email,
+                    'token' => $token,
+                    'created_at' => Carbon::now(),
+                ]);
+        }
+
+        #Link_token
+        $actionLink = route('admin.password_reset_token', ['token' => $token]);
+
+        $data = [
+            'actionLink' => $actionLink,
+            'user' => $user,
+        ];
+
+        #Email_body
+        $mail_body = view('email-template.forgot-password', $data)->render();
+
+        $mailConfig = [
+            'recipeint_address' => $user->email,
+            'recipeint_name' => $user->name,
+            'subject' => 'Réinitialisation de votre mot de passe',
+            'body' => $mail_body,
+        ];
+
+        if (CMail::send($mailConfig)) {
+            return redirect()->route('admin.forgot')->with('success', 'Un email de réinitialisation vous a été envoyé avec succès.');
+        } else {
+            return redirect()->route('admin.forgot')->with('fail', 'Échec de l’envoi de l’email. Veuillez réessayer plus tard.');
+        }
+
+    }
+
 }
