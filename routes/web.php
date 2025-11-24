@@ -12,7 +12,7 @@ Route::get('/', function () {
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Auth
-    Route::middleware([])->group(function () {
+    Route::middleware(['guest'])->group(function () {
         Route::controller(AuthController::class)->group(function () {
             Route::get('/login', 'login_form')->name('login');
             Route::post('/login', 'loginHandler')->name('login_handler');
@@ -21,9 +21,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     // Admin
-    Route::middleware([])->group(function () {
+    Route::middleware(['auth'])->group(function () {
         Route::controller(AdminController::class)->group(function () {
             Route::get('/dashboard', 'dashboard')->name('dashboard');
+            Route::post('/logout', 'logoutHandler')->name('logout_handler');
         });
     });
 
