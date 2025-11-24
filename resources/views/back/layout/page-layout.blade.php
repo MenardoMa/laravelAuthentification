@@ -158,7 +158,7 @@
                 </div>
             </div>
             <div class="user-info-dropdown">
-                @livewire('admin.top-user-info')
+                {{-- @livewire('admin.top-user-info') --}}
             </div>
         </div>
     </div>
@@ -268,7 +268,7 @@
             <div class="sidebar-menu">
                 <ul id="accordion-menu">
                     <li>
-                        <a href="{{ route('admin.dashboard') }}" class="dropdown-toggle no-arrow">
+                        <a href="" class="dropdown-toggle no-arrow">
                             <span class="micon fa fa-home"></span><span class="mtext">Home</span>
                         </a>
                     </li>
@@ -308,7 +308,7 @@
                         <div class="sidebar-small-cap">Setting</div>
                     </li>
                     <li>
-                        <a href="{{ route('admin.profil') }}" class="dropdown-toggle no-arrow">
+                        <a href="" class="dropdown-toggle no-arrow">
                             <span class="micon fa fa-user-circle"></span>
                             <span class="mtext">
                                 Profil

@@ -15,6 +15,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware([])->group(function () {
         Route::controller(AuthController::class)->group(function () {
             Route::get('/login', 'login_form')->name('login');
+            Route::post('/login', 'loginHandler')->name('login_handler');
             Route::get('/forgot-password', 'forgot_form')->name('forgot');
         });
     });

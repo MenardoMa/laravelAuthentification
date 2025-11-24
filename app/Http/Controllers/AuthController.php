@@ -12,7 +12,12 @@ class AuthController extends Controller
             'pageTitle' => 'Login',
         ];
 
-        return $data;
+        return view('back.pages.auth.login', $data);
+    }
+
+    public function loginHandler(Request $request)
+    {
+        dd($request->all());
     }
 
     public function forgot_form(Request $request)
@@ -21,6 +26,6 @@ class AuthController extends Controller
             'pageTitle' => 'Forgot',
         ];
 
-        return $data;
+        return view('back.pages.auth.forgot', $data);
     }
 }
