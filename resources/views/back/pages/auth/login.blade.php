@@ -9,6 +9,7 @@
             <h2 class="text-center text-primary">Login</h2>
         </div>
         <form action="{{ route('admin.login_handler') }}" method="POST">
+            <x-form-alerts></x-form-alerts>
             @csrf
             <div class="input-group custom mb-1">
                 <input type="text" class="form-control form-control-lg" placeholder="Username/Email" name="login_id"
