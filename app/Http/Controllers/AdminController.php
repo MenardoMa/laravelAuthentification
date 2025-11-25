@@ -24,4 +24,13 @@ class AdminController extends Controller
         return redirect()->route('admin.login')->with('fail', 'Vous etes deconnecter');
     }
 
+    public function profilHandler(Request $request)
+    {
+        $data = [
+            'pageTitle' => 'Profil',
+        ];
+
+        return view('back.pages.profil', $data);
+    }
+
 }

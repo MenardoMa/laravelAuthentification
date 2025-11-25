@@ -219,7 +219,7 @@ class AuthController extends Controller
             $mailConfig = [
                 'recipient_address' => $user->email,
                 'recipeint_name' => $user->name,
-                'subject' => 'Notification : changement de mot de passe confirmé',
+                'subject' => 'Changement de mot de passe confirmé',
                 'body' => $mail_body,
             ];
 

@@ -29,6 +29,7 @@
 
     <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @stack('stylesheets')
 </head>
 
@@ -290,7 +291,7 @@
             <div class="sidebar-menu">
                 <ul id="accordion-menu">
                     <li>
-                        <a href="" class="dropdown-toggle no-arrow">
+                        <a href="{{ route('admin.dashboard') }}" class="dropdown-toggle no-arrow">
                             <span class="micon fa fa-home"></span><span class="mtext">Home</span>
                         </a>
                     </li>
@@ -330,7 +331,7 @@
                         <div class="sidebar-small-cap">Setting</div>
                     </li>
                     <li>
-                        <a href="" class="dropdown-toggle no-arrow">
+                        <a href="{{ route('admin.profil_handler') }}" class="dropdown-toggle no-arrow">
                             <span class="micon fa fa-user-circle"></span>
                             <span class="mtext">
                                 Profil
@@ -373,6 +374,32 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('toastr', ({ message }) => {
+
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "5000"
+                };
+
+                if (message.type === 'success') {
+                    toastr.success(message.message);
+                } else if (message.type === 'error') {
+                    toastr.error(message.message);
+                } else if (message.type === 'info') {
+                    toastr.info(message.message);
+                } else if (message.type === 'warning') {
+                    toastr.warning(message.message);
+                }
+            });
+        });
+    </script>
+
     @stack('scripts')
 </body>
 
