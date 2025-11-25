@@ -31,14 +31,14 @@ return [
         ],
     ],
 
-    'email' => [
+    'mail' => [
         'host' => env('CMAIL_HOST'),
         'port' => env('CMAIL_PORT'),
         'username' => env('CMAIL_USERNAME'),
         'password' => env('CMAIL_PASSWORD'),
         'encryption' => env('CMAIL_ENCRYPTION'),
-        'from_address' => env('MAIL_FROM_ADDRESS'),
-        'from_name' => env('MAIL_FROM_ADDRESS'),
-    ]
+        'from_address' => env('CMAIL_FROM_ADDRESS'),
+        'from_name' => env('CMAIL_FROM_NAME'),
+    ],
 
 ];

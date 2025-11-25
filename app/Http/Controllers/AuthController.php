@@ -9,6 +9,7 @@ use App\Helpers\CMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -153,6 +154,85 @@ class AuthController extends Controller
         } else {
             return redirect()->route('admin.forgot')->with('fail', 'Échec de l’envoi de l’email. Veuillez réessayer plus tard.');
         }
+
+    }
+
+    #Password Reset 
+    public function passwordResetToken(Request $request)
+    {
+        $tokenUser = DB::table('password_reset_tokens')
+            ->where('token', $request->token)
+            ->first();
+
+        if ($tokenUser) {
+
+            $data = [
+                'pageTitle' => 'Password reset',
+                'token' => $request->token,
+            ];
+
+            return view('back.pages.auth.password-reset', $data);
+        } else {
+            return redirect()->route('admin.forgot')->with('fail', 'Le lien de réinitialisation est invalide ou a expiré.');
+        }
+
+    }
+
+    #Password Reset Traitement
+    public function passwordResetHandler(Request $request)
+    {
+        $request->validate([
+            'new_password' => ['required', 'min:5', 'required_with:new_password_config', 'same:new_password_config'],
+            'new_password_config' => ['required', 'min:5']
+        ], [
+            'new_password.required' => 'Veuillez saisir un nouveau mot de passe.',
+            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 5 caractères.',
+            'new_password.required_with' => 'Veuillez confirmer votre mot de passe.',
+            'new_password.same' => 'Les mots de passe ne correspondent pas. Veuillez réessayer.',
+
+            'new_password_config.required' => 'Veuillez confirmer votre nouveau mot de passe.',
+            'new_password_config.min' => 'La confirmation doit contenir au moins 5 caractères.',
+        ]);
+
+        $tokenUser = DB::table('password_reset_tokens')
+            ->where('token', $request->token)
+            ->first();
+
+        #USER
+        $user = User::where('email', $tokenUser->email)->first();
+
+        $new_password = User::where('email', $user->email)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        #Check
+        if ($new_password) {
+
+            $data = [
+                'actionLink' => route('admin.login'),
+                'user' => $user,
+            ];
+
+            // #template mail
+            $mail_body = view('email-template.confirm-password-reset', $data);
+
+            $mailConfig = [
+                'recipient_address' => $user->email,
+                'recipeint_name' => $user->name,
+                'subject' => 'Notification : changement de mot de passe confirmé',
+                'body' => $mail_body,
+            ];
+
+            if (CMail::send($mailConfig)) {
+                return redirect()->route('admin.login')->with('success', 'Vous devez vous connecter.');
+            } else {
+                return redirect()->route('admin.forgot')->with('fail', 'Échec de l’envoi de l’email. Veuillez réessayer plus tard.');
+            }
+
+        } else {
+            return redirect()->route('admin.forgot')->with('fail', 'Une erreur est survenue lors de la mise à jour du mot de passe. Veuillez réessayer.');
+        }
+
 
     }
 
