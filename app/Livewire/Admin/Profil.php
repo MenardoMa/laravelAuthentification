@@ -64,6 +64,9 @@ class Profil extends Component
             ]);
         }
 
+        #Transmission
+        $this->dispatch('updateUserInfo')->to(TopHeaderUser::class);
+
     }
     public function render()
     {
