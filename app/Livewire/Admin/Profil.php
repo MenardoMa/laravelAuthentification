@@ -38,7 +38,7 @@ class Profil extends Component
         $this->email = $user->email;
         $this->bio = $user->bio;
 
-        if ($user->social_links()) {
+        if ($user->social_links) {
 
             $this->facebook = $user->social_links->facebook;
             $this->github = $user->social_links->github;
@@ -217,7 +217,7 @@ class Profil extends Component
         if ($query) {
             $this->dispatch('toastr', message: [
                 'type' => 'success',
-                'message' => 'Social lien ajouter avec succes'
+                'message' => 'Sauvegarder'
             ]);
         } else {
             $this->dispatch('toastr', message: [
