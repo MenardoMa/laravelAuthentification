@@ -54,4 +54,11 @@ class User extends Authenticatable
             'type' => UserType::class,
         ];
     }
+
+    public function social_links()
+    {
+        # 1 à 1
+        return $this->belongsTo(SocialLinks::class, 'id', 'user_id');
+    }
+
 }

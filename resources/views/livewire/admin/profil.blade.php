@@ -1,3 +1,11 @@
+@push('stylesheets')
+    <style>
+        button:disabled {
+            cursor: not-allowed;
+            opacity: .6;
+        }
+    </style>
+@endpush
 <div>
     <div class="row">
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-30">
@@ -73,17 +81,25 @@
                     <div class="tab height-100-p">
                         <ul class="nav nav-tabs customtab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab">Timeline</a>
+                                <a wire:click="selectTab('update_personnal')"
+                                    class="nav-link {{ $tab == 'update_personnal' ? 'active' : '' }}" data-toggle="tab"
+                                    href="#timeline" role="tab">Personnal
+                                    Info</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tasks" role="tab">Tasks</a>
+                                <a wire:click="selectTab('update_password')"
+                                    class="nav-link {{ $tab == 'update_password' ? 'active' : '' }}" data-toggle="tab"
+                                    href="#tasks" role="tab">Password</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#setting" role="tab">Settings</a>
+                                <a wire:click="selectTab('update_social')"
+                                    class="nav-link {{ $tab == 'update_social' ? 'active' : '' }}" data-toggle="tab"
+                                    href="#setting" role="tab">Social Link</a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="timeline" role="tabpanel">
+                            <div class="tab-pane fade {{ $tab == 'update_personnal' ? 'show active' : '' }}"
+                                id="timeline" role="tabpanel">
                                 <div class="pd-20">
                                     <form wire:submit="updatePersonnalDetail()">
                                         <div class="row">
@@ -126,19 +142,134 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Save Change</button>
+                                            <button class="btn btn-primary" type="submit">
+                                                <span wire:loading.remove wire:target="updatePersonnalDetail">
+                                                    Save changes
+                                                </span>
+                                                <span wire:loading wire:target="updatePersonnalDetail">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                    Traitement...
+                                                </span>
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="tasks" role="tabpanel">
+                            <div class="tab-pane fade {{ $tab == 'update_password' ? 'show active' : '' }}" id="tasks"
+                                role="tabpanel">
                                 <div class="pd-20 profile-task-wrap">
-                                    ---PERSONNAL PASSWORD---
+                                    <div>
+                                        <form wire:submit="updateUserPassword()">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="">Mot de Passe courant</label>
+                                                        <input type="password" placeholder="Mot de passe courant"
+                                                            class="form-control" wire:model="current_password">
+                                                        @error('current_password')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="">Nouveau Mot de Passe</label>
+                                                        <input type="password" placeholder="Nouveau Mot de Passe"
+                                                            class="form-control" wire:model="new_password">
+                                                        @error('new_password')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="">Confirmation </label>
+                                                        <input type="password"
+                                                            placeholder="Confirmation du nouveau Mot de Passe"
+                                                            class="form-control" wire:model="new_password_config">
+                                                        @error('new_password_config')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <span wire:loading.remove wire:target="updateUserPassword">Save
+                                                        Change
+                                                    </span>
+
+                                                    <span wire:loading wire:target="updateUserPassword">
+                                                        <i class="fa fa-spinner fa-spin"></i>
+                                                        Traitement...
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="setting" role="tabpanel">
+                            <div class="tab-pane fade {{ $tab == 'update_social' ? 'show active' : '' }} " id="setting"
+                                role="tabpanel">
                                 <div class="pd-20 profile-task-wrap">
-                                    ---SOCIAL LINK--
+                                    <form wire:submit="updateSocialLink()">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Facebook</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://facebook.com/votre-profil"
+                                                        wire:model="facebook">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">GitHub</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://github.com/votre-profil"
+                                                        wire:model="github">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">LinkedIn</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://linkedin.com/in/votre-profil"
+                                                        wire:model="linkedin">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Instagram</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://instagram.com/votre-profil"
+                                                        wire:model="instagram">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Twitter</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://twitter.com/votre-profil"
+                                                        wire:model="twitter">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="">Youtube</label>
+                                                    <input type="text" class="form-control"
+                                                        placeholder="https://youtube.com/votre-profil"
+                                                        wire:model="youtube">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save change</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
