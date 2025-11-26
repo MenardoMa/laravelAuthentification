@@ -22,4 +22,5 @@
             </div>
         </div>
     </div>
+    @livewire('admin.general-setting')
 @endsection
