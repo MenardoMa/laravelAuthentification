@@ -170,8 +170,8 @@ class Profil extends Component
                 'message' => 'Mot de passe mise a jour avec success',
             ]);
             #Je deconnecte le User
-            Auth::logout();
-            return redirect()->route('admin.login')->with('success', 'vous devez vous connecter en utilisant de nouvelle identifiant');
+            #Auth::logout();
+            $this->reset(['current_password', 'new_password', 'new_password_config']);
         } else {
             return redirect()->route('admin.profil_handler')->with('fail', 'une erreur est survenue');
         }
