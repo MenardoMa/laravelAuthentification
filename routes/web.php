@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', 'dashboard')->name('dashboard');
             Route::post('/logout', 'logoutHandler')->name('logout_handler');
             Route::get('/profil', 'profilHandler')->name('profil_handler');
+            Route::get('/generic-setting', 'genericSetting')->name('generic_setting');
         });
     });
 

@@ -268,7 +268,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Save change</button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <span wire:loading.remove wire:target="updateSocialLink()">Save
+                                                change</span>
+                                            <span wire:loading wire:target="updateSocialLink()">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                                Traitement...
+                                            </span>
+                                        </button>
                                     </form>
                                 </div>
                             </div>

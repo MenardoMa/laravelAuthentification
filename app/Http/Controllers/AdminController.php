@@ -33,4 +33,14 @@ class AdminController extends Controller
         return view('back.pages.profil', $data);
     }
 
+    public function genericSetting()
+    {
+        $data = [
+            'pageTitle' => 'General Setting',
+        ];
+
+        return view('back.pages.genericSetting', $data);
+
+    }
+
 }
